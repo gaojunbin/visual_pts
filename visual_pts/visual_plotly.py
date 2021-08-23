@@ -154,6 +154,8 @@ class Visual(object):
                 return points[:,2]
             if col=='distance':
                 return np.sqrt(points[:,0]**2+points[:,1]**2)
+            if col=='intensity':
+                return points[:,3]
         
         pts = go.Scatter3d(
                 x=points[:,0], y=points[:,1], z=points[:,2], 
