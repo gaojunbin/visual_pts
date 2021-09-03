@@ -406,7 +406,8 @@ class Kitty_Visual(Visual):
 
 if __name__ == '__main__':
     # example
-    kitty = Kitty_Visual("/home/gaojunbin/project/code/pv_rcnn/data/kitti")
+    # kitty = Kitty_Visual("/home/gaojunbin/project/code/pv_rcnn/data/kitti")
+    kitty = Kitty_Visual("../kitti")
     kitty.draw_scenes('000043')
 
 
