@@ -20,6 +20,8 @@ Here is an example:
 
 ## 3Dbbox_image
 
+> refer: https://blog.csdn.net/qq_38316300/article/details/110758104
+
 run `kitti_object.py` file:
 
 ```bash
