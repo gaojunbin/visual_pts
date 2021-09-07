@@ -5,7 +5,7 @@ from setuptools import setup
 with open('README.md', 'r') as fp:
     readme = fp.read()
  
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 LICENSE = "MIT"
 
  
