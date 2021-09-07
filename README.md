@@ -1,54 +1,32 @@
 # Visualize Point Clouds (with bbox) by Plotly
 
-## Install
+## Installation
 
-This code just depends on Plotly which can be easily installed.
+This code mostly depends on Plotly which can be easily installed.
 
 ```shell
-pip install plotly
+pip install pcshow
 ```
 
-## Usage
+## Getting Started
 
 + Implement  of base class Visual which can visualize standard data.
 + Implement of KITTY dataset.
 + Other dataset will be update in the future. Welcome to submit a pull request.
 
-Here is an example:
+You can inference Demo to Visualize.
 
-![](./dom/1.png)
+Here is an example (KITTI 000043):
 
-## 3Dbbox_image
+<img src="docs/000043_img2D.png" style="zoom:75%;" />
 
-> refer: https://blog.csdn.net/qq_38316300/article/details/110758104
+<img src="docs/000043_img3D.png" style="zoom:75%;" />
 
-run `kitti_object.py` file:
+![](docs/000043_pc3D.png)
 
-```bash
-cd visual_pts
-python kitti_object.py
-```
+## Contribution
 
-Then, get two images:
+JunbinGao, HaoRuan.
 
-- 2D bbox in image:
+Welcome to be a member of the OpenPCDet development team by contributing to this repo, and feel free to contact us for any potential contributions.
 
-  ![](README.assets/000043_img2D.png)
-
-- 3D bbox in image
-
-  ![](README.assets/000043_img3D.png)
-
-run `visual_plotly.py` file:
-
-```bash
-python visual_plotly.py
-```
-
-it will open browser:
-
-![](README.assets/000043.png)
-
-Last, merge two image in Visio:
-
-![](README.assets/img3D_pointcloud.png)
