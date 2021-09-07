@@ -5,7 +5,7 @@
 This code mostly depends on Plotly which can be easily installed.
 
 ```shell
-pip install pcshow
+pip install visual_pts
 ```
 
 ## Getting Started

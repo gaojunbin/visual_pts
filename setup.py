@@ -10,7 +10,7 @@ LICENSE = "MIT"
 
  
 setup(
-    name='pcshow',
+    name='visual_pts',
     version=VERSION,
     description=(
         'Visualize Point Clouds (with bbox) by Plotly'
