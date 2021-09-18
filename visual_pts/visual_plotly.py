@@ -25,13 +25,15 @@ class Visual(object):
         self.pts_size = 1
         self.show_level = 1
         self.col = 'height'
+        self.axis_range = 100
         self.pts = pts
         self.gt = gt
         
-    def set_show(self, pts_size=1, pts_colorscale='deep', col='height'):
+    def set_show(self, pts_size=1, pts_colorscale='deep', col='height',axis_range=100):
         self.pts_colorscale = pts_colorscale
         self.pts_size = pts_size
         self.col = col
+        self.axis_range = axis_range
         
     def give_data(self, pts, gt=None):
         self.pts = pts
@@ -196,12 +198,22 @@ class Visual(object):
         else:
             data = [points, corners_3d_lines, corners_3d_points]
 
-        fig = go.Figure(data=data, layout=dict(
-            scene=dict(
-                xaxis=dict(visible=True),
-                yaxis=dict(visible=True),
-                zaxis=dict(visible=True)
+        fig = go.Figure(data=data, 
+            layout=dict(
+                scene=dict(
+                    xaxis=dict(visible=True),
+                    yaxis=dict(visible=True),
+                    zaxis=dict(visible=True)
+                )
             )
         )
-                       )
+        fig.update_layout(
+            scene=dict(
+                xaxis=dict(tickmode='auto',nticks=10, range=[-self.axis_range, self.axis_range],autorange=False,),
+                yaxis=dict(tickmode='auto',nticks=10, range=[-self.axis_range, self.axis_range],autorange=False,),
+                zaxis=dict(tickmode='auto',nticks=10, range=[-self.axis_range, self.axis_range],autorange=False,),
+                aspectratio=dict(x=1, y=1, z=1)#改变画布空间比例为1：1：1
+                ),
+            margin=dict(r=0, l=0, b=0, t=0))
+
         plotly.offline.iplot(fig, filename= fig_name)
