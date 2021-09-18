@@ -2,7 +2,7 @@
 Author: LLG
 Date: 2021-09-18 15:23:27
 LastEditors: LLG
-LastEditTime: 2021-09-18 16:23:33
+LastEditTime: 2021-09-18 23:11:26
 Description: file content
 '''
 
@@ -14,18 +14,20 @@ from visual_pts.visual_plotly import Visual
 class Point_IO(Visual):
     '''
     Note:
-        Specific class for point cloud visialization.
+        Specific class for point cloud load, save and visialization.
         Inherited from Visual class.
     Input:
         data_path: The path of point cloud, including .xyz, .txt, .asc and .off.
     '''
     
     def __init__(self, data_path):
-        super().__init__() 
-        assert data_path.split(".")[-1] in ['.xyz', '.txt', '.asc', '.off'], "file could only be .xyz, .txt, .asc or .off"
+        super().__init__()
+        self.axis_range = 1
+        assert data_path.split(".")[-1] in ['xyz', 'txt', 'asc', 'off'], "file could only be xyz, txt, asc or off"
         self.data_path = data_path
 
-    def loadmesh(fn, skiprows=0, strip=True):
+    def loadmesh(self, skiprows=0, strip=True):
+        fn = self.data_path
         if fn.endswith('.txt'):
             return loadtxt(fn, skiprows=skiprows, strip=strip)
         elif fn.endswith('.asc'):
@@ -37,7 +39,8 @@ class Point_IO(Visual):
         else:
             raise ValueError('{}: Unknown filetype'.format(fn))
     
-    def savemesh(fn, *data):
+    def savemesh(self, fn, *data):
+        fn = self.data_path
         if fn.endswith('.txt'):
             savetxt(fn, data[0])
         elif fn.endswith('.asc'):
@@ -50,10 +53,8 @@ class Point_IO(Visual):
             raise ValueError('{}: Unknown filetype'.format(fn))
         
     def draw_scenes(self, show_level=0, fig_name=None):
-        self.pts = self.loadmesh(self.data_path)
+        self.pts = self.loadmesh()
         super().draw_scenes(show_level, fig_name)
-
-
 
 def loadtxt(fn, delimiter=',', comments='#', skiprows=0, strip=True):
     result = []
