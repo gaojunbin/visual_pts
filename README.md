@@ -24,9 +24,13 @@ Here is an example (KITTI 000043):
 
 ![](docs/000043_pc3D.png)
 
+- You can use the `Point_IO()` to load, save or visualize a ponit cloud, including .xyz, .txt, .asc and .off.
+
+![](docs/point_visual.png)
+
 ## Contribution
 
-JunbinGao, HaoRuan.
+JunbinGao, HaoRuan and LianguangLiu.
 
 Welcome to be a member of the OpenPCDet development team by contributing to this repo, and feel free to contact us for any potential contributions.
 
