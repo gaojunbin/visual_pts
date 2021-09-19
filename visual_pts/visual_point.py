@@ -2,7 +2,7 @@
 Author: LLG
 Date: 2021-09-18 15:23:27
 LastEditors: LLG
-LastEditTime: 2021-09-18 23:11:26
+LastEditTime: 2021-09-19 18:01:09
 Description: file content
 '''
 
@@ -20,26 +20,28 @@ class Point_IO(Visual):
         data_path: The path of point cloud, including .xyz, .txt, .asc and .off.
     '''
     
-    def __init__(self, data_path):
+    def __init__(self, data_path, skiprows=0, strip=True):
         super().__init__()
-        self.axis_range = 1
         assert data_path.split(".")[-1] in ['xyz', 'txt', 'asc', 'off'], "file could only be xyz, txt, asc or off"
         self.data_path = data_path
+        self.axis_range = 1
+        self.skiprows = skiprows
+        self.strip = strip
 
-    def loadmesh(self, skiprows=0, strip=True):
+    def loadmesh(self):
         fn = self.data_path
         if fn.endswith('.txt'):
-            return loadtxt(fn, skiprows=skiprows, strip=strip)
+            return loadtxt(fn, skiprows=self.skiprows, strip=self.strip)
         elif fn.endswith('.asc'):
-            return loadasc(fn, skiprows=skiprows, strip=strip)
+            return loadasc(fn, skiprows=self.skiprows, strip=self.strip)
         elif fn.endswith('.xyz'):
-            return loadxyz(fn, skiprows=skiprows, strip=strip)
+            return loadxyz(fn, skiprows=self.skiprows, strip=self.strip)
         elif fn.endswith('.off'):
             return loadoff(fn)
         else:
             raise ValueError('{}: Unknown filetype'.format(fn))
     
-    def savemesh(self, fn, *data):
+    def savemesh(self, *data):
         fn = self.data_path
         if fn.endswith('.txt'):
             savetxt(fn, data[0])
@@ -54,6 +56,7 @@ class Point_IO(Visual):
         
     def draw_scenes(self, show_level=0, fig_name=None):
         self.pts = self.loadmesh()
+        self.pts = self.pts[:, 0:3]
         super().draw_scenes(show_level, fig_name)
 
 def loadtxt(fn, delimiter=',', comments='#', skiprows=0, strip=True):
