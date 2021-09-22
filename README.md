@@ -8,6 +8,8 @@ This code mostly depends on Plotly which can be easily installed.
 pip install visual_pts
 ```
 
+NOTE: The latest version now is visual_pts==1.4.0
+
 ## Getting Started
 
 + Implement  of base class Visual which can visualize standard data.
@@ -22,7 +24,7 @@ Here is an example (KITTI 000043):
 
 <img src="docs/000043_img3D.png" style="zoom:75%;" />
 
-![](docs/000043_pc3D.png)
+<img src="docs/000043_pc3D.png" style="zoom:55%;" />
 
 - You can use the `Point_IO()` to load, save or visualize a ponit cloud, including .xyz, .txt, .asc and .off.
 
@@ -32,5 +34,5 @@ Here is an example (KITTI 000043):
 
 JunbinGao, HaoRuan and LianguangLiu.
 
-Welcome to be a member of the OpenPCDet development team by contributing to this repo, and feel free to contact us for any potential contributions.
+Welcome to be a member of the visual_pts development team by contributing to this repo, and feel free to contact us for any potential contributions.
 
