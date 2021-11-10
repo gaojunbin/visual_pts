@@ -8,7 +8,14 @@ This code mostly depends on Plotly which can be easily installed.
 pip install visual_pts
 ```
 
-NOTE: The latest version now is visual_pts==1.4.0
+⭐️ NOTE: The latest version now is visual_pts==1.5.0
+
+## 🔥Update
++ Refine Base Class Visual, now supports different colors in different categories.
+
++ Refine Kitti Class, now supports different colors in different categories both in points clouds, 2D and 3D bboxes in images.
+
++ NuScenes will be supported soon~
 
 ## Getting Started
 

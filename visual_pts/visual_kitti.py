@@ -1,4 +1,4 @@
-from visual_pts.visual_plotly import Visual
+from visual_pts.visual import Visual
 import visual_pts.util_kitti as utils
 from matplotlib import pyplot as plt
 import os
@@ -173,6 +173,7 @@ class Kitti_Visual_Img(object):
         self.lidar_dir = os.path.join(self.split_dir, lidar_dir)
         self.depth_dir = os.path.join(self.split_dir, depth_dir)
         self.pred_dir = os.path.join(self.split_dir, pred_dir)
+        self.category_map_color = dict()
 
     def __len__(self):
         return self.num_samples
@@ -231,6 +232,9 @@ class Kitti_Visual_Img(object):
         depth_filename = os.path.join(self.depth_dir, "%s.txt" % (idx))
         return os.path.exists(depth_filename)
     
+    def give_colors(self, category_map_color):
+        self.category_map_color = category_map_color
+    
     def draw_3Dbbox_in_image(self, data_idx):
         objects = self.get_label_objects(data_idx)
         calib = self.get_calibration(data_idx)
@@ -239,49 +243,37 @@ class Kitti_Visual_Img(object):
         return img_bbox2d, img_bbox3d
 
     def show_image_with_boxes(self, img, objects, calib, show3d=True, depth=None):
+        if self.category_map_color:
+            category_map_color = dict()
+            for (k,v) in self.category_map_color.items():
+                rgb = v.split('(')[-1].split(')')[0].split(',')
+                rgb=(int(rgb[2]), int(rgb[1]), int(rgb[0]))
+                category_map_color.update({k:rgb})
+        else:
+            category_map_color = {'Car':(0,255,0), 'Pedestrian':(255, 255, 0), 'Cyclist':(0, 255, 255)}
+
         """ Show image with 2D bounding boxes """
         img1 = np.copy(img)  # for 2d bbox
         img2 = np.copy(img)  # for 3d bbox
         #img3 = np.copy(img)  # for 3d bbox
         #TODO: change the color of boxes
         for obj in objects:
-            if obj.type == "DontCare":
-                continue
-            if obj.type == "Car":
+            if obj.type in category_map_color.keys():
                 cv2.rectangle(
                 img1,
                 (int(obj.xmin), int(obj.ymin)),
                 (int(obj.xmax), int(obj.ymax)),
-                (0, 255, 0),
+                category_map_color[obj.type],
                 2,
             )
-            if obj.type == "Pedestrian":
-                cv2.rectangle(
-                img1,
-                (int(obj.xmin), int(obj.ymin)),
-                (int(obj.xmax), int(obj.ymax)),
-                (255, 255, 0),
-                2,
-            )
-            if obj.type == "Cyclist":
-                cv2.rectangle(
-                img1,
-                (int(obj.xmin), int(obj.ymin)),
-                (int(obj.xmax), int(obj.ymax)),
-                (0, 255, 255),
-                2,
-            )
+            
             box3d_pts_2d, _ = utils.compute_box_3d(obj, calib.P)
-            if obj.type == "Car":
-                img2 = utils.draw_projected_box3d(img2, box3d_pts_2d, color=(0, 255, 0))
-            elif obj.type == "Pedestrian":
-                img2 = utils.draw_projected_box3d(img2, box3d_pts_2d, color=(255, 255, 0))
-            elif obj.type == "Cyclist":
-                img2 = utils.draw_projected_box3d(img2, box3d_pts_2d, color=(0, 255, 255))
+            if obj.type in category_map_color.keys():
+                img2 = utils.draw_projected_box3d(img2, box3d_pts_2d, color=category_map_color[obj.type])
 
         return img1, img2
 
-class Kitti_Visual(Visual):
+class Kitti(Visual):
     '''
     Note:
         Specific class for Kitti dataset visialization.
@@ -297,42 +289,58 @@ class Kitti_Visual(Visual):
         assert mode in ['training','testing'], "mode could only be 'training' or 'testing'"
         self.mode = mode
         self.kiiti_visual_img = Kitti_Visual_Img(data_path, mode)
+        self.settings.update({"category_list": "Not yet accomplished in Kiiti_Visual Class",})
 
     def draw_imgs(self, index, img_level):
+        if self.category_map_color:
+            self.kiiti_visual_img.give_colors(self.category_map_color)
         img2d, img3d = self.kiiti_visual_img.draw_3Dbbox_in_image(index)
         img2d = img2d[:,:,::-1] 	# transform image to rgb
         img3d = img3d[:,:,::-1]
 
-        if img_level==1:
+        if img_level=='No':
+            pass
+        elif img_level=='2D':
             plt.imshow(img2d)
             plt.show()
-            # cv2.imshow("2dbox", img2d)
-        if img_level==2:
+        elif img_level=='3D':
             plt.imshow(img3d)
             plt.show()
-            # cv2.imshow("3dbox", img3d)
-        if img_level==3:
+        elif img_level=='Both':
             plt.imshow(img2d)
             plt.show()
             plt.imshow(img3d)
             plt.show()
-            # cv2.imshow("2dbox", img2d)
-            # cv2.imshow("3dbox", img3d)
+        else:
+            print("img_level only can be chosen in ['No', '2D', '3D', 'Both'].")
+            raise KeyError
             
         return img2d, img3d
         
-    def draw_scenes(self, index, show_level=1, img_level=0, fig_name=None):
-        pts,gt = self.get_data_from_index(index)
-        self.give_data(pts, gt)
+    def draw_scenes(self, index, show_bbox=True, img_level='Both', fig_name=None):
+        pts,gt,name = self.get_data_from_index(index)
+
+        if not self.category_map_color:
+            category_list = list()
+            for each_name in self.check_numpy_to_list(name):
+                category_list.append(each_name)
+            self.category_map_color = self.map_category_to_colors(category_list)
+            self.check_setting_is_right()
+
+        if show_bbox:
+            self.give_data(pts, gt, name)
+        else:
+            self.give_data(pts)
+
         self.draw_imgs(index, img_level)
-        super().draw_scenes(show_level, fig_name)
+        super().draw_scenes(fig_name)
     
     def get_data_from_index(self, index):
         
         pts = self.read_pts_from_index(index)
-        gt = self.read_gt_from_index(index)
+        gt, name = self.read_gt_from_index(index)
         
-        return pts,gt
+        return pts,gt,name
     
     def read_pts_from_index(self, index):
         pts_file = self.data_path + '/' + self.mode +'/velodyne/' + ('%s.bin' % index)
@@ -355,7 +363,7 @@ class Kitti_Visual(Visual):
         l, h, w = dims[:, 0:1], dims[:, 1:2], dims[:, 2:3]
         loc_lidar[:, 2] += h[:, 0] / 2
         gt_boxes_lidar = np.concatenate([loc_lidar, l, w, h, -(np.pi / 2 + rots[..., np.newaxis])], axis=1)
-        return gt_boxes_lidar
+        return gt_boxes_lidar,name
     
     def get_label(self, index):
         label_file = self.data_path + '/' + self.mode + '/label_2/' + ('%s.txt' % index)

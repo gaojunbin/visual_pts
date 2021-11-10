@@ -5,7 +5,7 @@ from setuptools import setup
 with open('README.md', 'r') as fp:
     readme = fp.read()
  
-VERSION = "1.4.0"
+VERSION = "1.5.0"
 LICENSE = "MIT"
 
 setup(
@@ -15,9 +15,9 @@ setup(
         'Visualize Point Clouds (with bbox) by Plotly'
     ),
     long_description=readme,
-    author='JunbinGao, HaoRuan',
+    author='JunbinGao, HaoRuan, LianguangLiu',
     author_email='junbingao@hust.edu.cn',
-    maintainer='JunbinGao, HaoRuan',
+    maintainer='JunbinGao, HaoRuan, LianguangLiu',
     maintainer_email='junbingao@hust.edu.cn',
     license=LICENSE,
     packages=setuptools.find_packages(),

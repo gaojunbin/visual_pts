@@ -9,7 +9,7 @@ Description: file content
 import numpy as np
 import os
 
-from visual_pts.visual_plotly import Visual
+from visual_pts.visual import Visual
 
 class Point_IO(Visual):
     '''
@@ -54,10 +54,10 @@ class Point_IO(Visual):
         else:
             raise ValueError('{}: Unknown filetype'.format(fn))
         
-    def draw_scenes(self, show_level=0, fig_name=None):
+    def draw_scenes(self, fig_name=None):
         self.pts = self.loadmesh()
         self.pts = self.pts[:, 0:3]
-        super().draw_scenes(show_level, fig_name)
+        super().draw_scenes(fig_name)
 
 def loadtxt(fn, delimiter=',', comments='#', skiprows=0, strip=True):
     result = []
